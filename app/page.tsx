@@ -69,6 +69,42 @@ export default function Home() {
   const [activeIndex, setActiveIndex] = useState(0);
   const sectionRefs = useRef<(HTMLElement | null)[]>([]);
 
+  const [waitlistEntity, setWaitlistEntity] = useState<typeof entities[0] | null>(null);
+  const [waitlistEmail, setWaitlistEmail] = useState("");
+  const [waitlistStatus, setWaitlistStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
+
+  const openWaitlist = (entity: typeof entities[0]) => {
+    setWaitlistEntity(entity);
+    setWaitlistEmail("");
+    setWaitlistStatus("idle");
+  };
+
+  const closeWaitlist = () => setWaitlistEntity(null);
+
+  const handleWaitlistSubmit = async (e: { preventDefault: () => void }) => {
+    e.preventDefault();
+    if (!waitlistEntity) return;
+    setWaitlistStatus("loading");
+    try {
+      const res = await fetch("/api/waitlist", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email: waitlistEmail, entity: waitlistEntity.id }),
+      });
+      if (!res.ok) throw new Error();
+      setWaitlistStatus("success");
+    } catch {
+      setWaitlistStatus("error");
+    }
+  };
+
+  useEffect(() => {
+    if (!waitlistEntity) return;
+    const onKey = (e: KeyboardEvent) => { if (e.key === "Escape") closeWaitlist(); };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [waitlistEntity]);
+
   useEffect(() => {
     const observers = sectionRefs.current.map((ref, i) => {
       if (!ref) return null;
@@ -408,6 +444,88 @@ export default function Home() {
           .dot-nav { right: 16px; }
           .content-wrapper { padding: 0 6vw; }
         }
+
+        .waitlist-overlay {
+          position: fixed;
+          inset: 0;
+          z-index: 200;
+          background: rgba(0,0,0,0.8);
+          backdrop-filter: blur(14px);
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          padding: 0 24px;
+          animation: fadeIn 0.2s ease;
+        }
+
+        .waitlist-modal {
+          max-width: 440px;
+          width: 100%;
+          position: relative;
+          background: #111;
+          padding: 44px 44px 40px;
+          border-radius: 6px;
+          animation: slideUp 0.25s ease;
+        }
+
+        .waitlist-input {
+          width: 100%;
+          background: rgba(255,255,255,0.05);
+          border: 1px solid rgba(255,255,255,0.1);
+          border-radius: 4px;
+          color: #fff;
+          font-family: 'Barlow', sans-serif;
+          font-size: 15px;
+          padding: 13px 16px;
+          outline: none;
+          transition: border-color 0.2s;
+          box-sizing: border-box;
+        }
+        .waitlist-input::placeholder { color: rgba(255,255,255,0.2); }
+        .waitlist-input:focus { border-color: rgba(255,255,255,0.35); }
+
+        .waitlist-submit {
+          width: 100%;
+          margin-top: 12px;
+          padding: 14px;
+          font-family: 'Barlow Condensed', sans-serif;
+          font-size: 13px;
+          font-weight: 700;
+          letter-spacing: 2px;
+          text-transform: uppercase;
+          color: #fff;
+          border: none;
+          border-radius: 999px;
+          cursor: pointer;
+          transition: opacity 0.2s, transform 0.2s;
+        }
+        .waitlist-submit:hover:not(:disabled) { opacity: 0.85; transform: translateY(-1px); }
+        .waitlist-submit:disabled { opacity: 0.45; cursor: default; }
+
+        .waitlist-close {
+          position: absolute;
+          top: 16px;
+          right: 16px;
+          background: none;
+          border: none;
+          color: rgba(255,255,255,0.3);
+          cursor: pointer;
+          padding: 6px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          transition: color 0.2s;
+        }
+        .waitlist-close:hover { color: rgba(255,255,255,0.8); }
+
+        @keyframes fadeIn {
+          from { opacity: 0; }
+          to { opacity: 1; }
+        }
+        @keyframes slideUp {
+          from { opacity: 0; transform: translateY(24px); }
+          to { opacity: 1; transform: translateY(0); }
+        }
       `}</style>
 
       {/* NAV */}
@@ -455,7 +573,7 @@ export default function Home() {
               letterSpacing: "clamp(3px, 1vw, 8px)",
               textTransform: "uppercase",
               color: "rgba(255,255,255,0.4)",
-            }}>A Multi-Vertical Sports Company</span>
+            }}>The V1 Hub. Everything Football.</span>
           </div>
           <div className="hero-entities" style={{ marginTop: 25, display: "flex", gap: "clamp(16px, 3vw, 40px)", flexWrap: "wrap", justifyContent: "center" }}>
             {entities.map((e) => (
@@ -522,27 +640,108 @@ export default function Home() {
             <p className="entity-tagline" style={{ color: "#fff" }}>{entity.tagline}</p>
             <p className="entity-description">{entity.description}</p>
 
-            <a
-              href={entity.ctaHref}
-              className={`cta-btn ${entity.ctaLive ? "live" : "coming-soon"}`}
-              style={{
-                color: entity.id === "v1portal" ? "#fff" : entity.accent,
-                borderColor: entity.id === "v1portal" ? "transparent" : entity.accent,
-                background: entity.id === "v1portal" ? "linear-gradient(135deg, red, #a0f)" : undefined,
-              }}
-              target={entity.ctaLive ? "_blank" : undefined}
-              rel={entity.ctaLive ? "noopener noreferrer" : undefined}
-            >
-              <span style={{ color: entity.id === "v1portal" ? "#fff" : entity.accent }}>{entity.cta}</span>
-              {entity.ctaLive && (
+            {entity.ctaLive ? (
+              <a
+                href={entity.ctaHref}
+                className="cta-btn live"
+                style={{
+                  color: entity.id === "v1portal" ? "#fff" : entity.accent,
+                  borderColor: entity.id === "v1portal" ? "transparent" : entity.accent,
+                  background: entity.id === "v1portal" ? "linear-gradient(135deg, red, #a0f)" : undefined,
+                }}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <span style={{ color: entity.id === "v1portal" ? "#fff" : entity.accent }}>{entity.cta}</span>
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
                   <path d="M7 17L17 7M17 7H7M17 7v10"/>
                 </svg>
-              )}
-            </a>
+              </a>
+            ) : (
+              <button
+                className="cta-btn"
+                onClick={() => openWaitlist(entity)}
+                style={{ color: entity.accent, borderColor: entity.accent, background: "none", cursor: "pointer" }}
+              >
+                <span style={{ color: entity.accent }}>Join Waitlist</span>
+              </button>
+            )}
           </div>
         </section>
       ))}
+
+      {/* WAITLIST MODAL */}
+      {waitlistEntity && (
+        <div
+          className="waitlist-overlay"
+          onClick={(e) => { if (e.target === e.currentTarget) closeWaitlist(); }}
+        >
+          <div className="waitlist-modal" style={{ borderTop: `2px solid ${waitlistEntity.accent}` }}>
+            <button className="waitlist-close" onClick={closeWaitlist} aria-label="Close">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <path d="M18 6L6 18M6 6l12 12"/>
+              </svg>
+            </button>
+
+            {waitlistStatus === "success" ? (
+              <div style={{ textAlign: "center", padding: "20px 0" }}>
+                <svg width="52" height="52" viewBox="0 0 24 24" fill="none" stroke={waitlistEntity.accent} strokeWidth="1.5" style={{ marginBottom: 20 }}>
+                  <circle cx="12" cy="12" r="10"/>
+                  <path d="M8 12l3 3 5-5"/>
+                </svg>
+                <h2 style={{ fontFamily: "'BankGothic','Barlow Condensed',sans-serif", fontSize: 40, fontWeight: 700, fontStyle: "italic", color: "#fff", marginBottom: 12, letterSpacing: -1, lineHeight: 1 }}>
+                  You&apos;re in.
+                </h2>
+                <p style={{ fontFamily: "'Barlow',sans-serif", fontSize: 15, fontWeight: 300, color: "rgba(255,255,255,0.5)", lineHeight: 1.6 }}>
+                  We&apos;ll reach out when {waitlistEntity.name} is ready to launch.
+                </p>
+              </div>
+            ) : (
+              <>
+                <p style={{ fontFamily: "'Barlow',sans-serif", fontSize: 11, fontWeight: 500, letterSpacing: 4, textTransform: "uppercase", color: waitlistEntity.accent, marginBottom: 16 }}>
+                  {waitlistEntity.name}
+                </p>
+                <h2 style={{ fontFamily: "'BankGothic','Barlow Condensed',sans-serif", fontSize: 38, fontWeight: 700, fontStyle: "italic", color: "#fff", marginBottom: 10, letterSpacing: -1, lineHeight: 1 }}>
+                  Get Early Access
+                </h2>
+                <p style={{ fontFamily: "'Barlow',sans-serif", fontSize: 15, fontWeight: 300, color: "rgba(255,255,255,0.45)", marginBottom: 32, lineHeight: 1.6 }}>
+                  Be first to know when {waitlistEntity.name} launches.
+                </p>
+                <form onSubmit={handleWaitlistSubmit}>
+                  <input
+                    className="waitlist-input"
+                    type="email"
+                    placeholder="your@email.com"
+                    value={waitlistEmail}
+                    onChange={(e) => setWaitlistEmail(e.target.value)}
+                    required
+                    autoFocus
+                  />
+                  {waitlistStatus === "error" && (
+                    <p style={{ fontFamily: "'Barlow',sans-serif", fontSize: 13, color: "#ff5555", marginTop: 8 }}>
+                      Something went wrong. Please try again.
+                    </p>
+                  )}
+                  <button
+                    className="waitlist-submit"
+                    type="submit"
+                    disabled={waitlistStatus === "loading"}
+                    style={{ background: waitlistEntity.accent }}
+                  >
+                    {waitlistStatus === "loading" ? "Joining..." : "Join Waitlist"}
+                  </button>
+                </form>
+                <p style={{ fontFamily: "'Barlow',sans-serif", fontSize: 12, color: "rgba(255,255,255,0.2)", marginTop: 16, textAlign: "center" }}>
+                  No spam.{" "}
+                  <a href={`/unsubscribe?email=${encodeURIComponent(waitlistEmail)}`} style={{ color: "rgba(255,255,255,0.3)", textDecoration: "underline" }}>
+                    Unsubscribe anytime.
+                  </a>
+                </p>
+              </>
+            )}
+          </div>
+        </div>
+      )}
 
       {/* FOOTER */}
       <footer className="footer-section">
