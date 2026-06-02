@@ -14,9 +14,10 @@ export async function POST(request: Request) {
 
   const { error } = await supabase
     .from("waitlist")
-    .upsert({ email, entity, subscribed: true }, { onConflict: "email,entity" });
+    .insert({ email, entity, subscribed: true });
 
-  if (error) {
+  // 23505 = unique violation (already signed up) — treat as success
+  if (error && error.code !== "23505") {
     console.error("[waitlist]", error.message);
     return Response.json({ error: "Failed to save" }, { status: 500 });
   }
