@@ -531,7 +531,7 @@ export default function Home() {
           .nav-links { display: none; }
           .dot-nav { right: 12px; }
           .content-wrapper { padding: 0 6vw; }
-          .nav-logo-wrap { width: 90px; height: 28px; }
+          .nav-logo-wrap { width: 21px; height: 28px; }
           .entity-section { height: auto; min-height: 100svh; padding: 120px 0 64px; }
           .entity-name { letter-spacing: -4px; }
           .footer-section {
@@ -888,8 +888,9 @@ export default function Home() {
           <Image src="/v1-mark.png" alt="VarsityOne" width={20} height={30} style={{ objectFit: "contain" }} />
           <span style={{ fontFamily: "'Barlow Condensed', sans-serif", fontSize: 14, fontWeight: 700, letterSpacing: 3, color: "rgba(255,255,255,0.4)", textTransform: "uppercase" }}>VarsityOne Group LLC</span>
         </div>
-        <p className="footer-legal">© {new Date().getFullYear()} VarsityOne Group LLC. All rights reserved. Murrieta, CA.</p>
-        <p className="footer-legal">vars1tyone.com</p>
+        <p className="footer-legal">© {new Date().getFullYear()} VarsityOne Group LLC. All rights reserved.</p>
+        <p className="footer-legal">San Diego, CA</p>
+        <p className="footer-legal">www.vars1tyone.com</p>
       </footer>
     </main>
   );
