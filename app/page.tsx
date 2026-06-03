@@ -41,7 +41,7 @@ const entities = [
   },
   {
     id: "v1clothing",
-    name: "V1CLOTHING",
+    name: "V1GEAR",
     tagline: "Wear the Standard.",
     description:
       "The VarsityOne clothing brand. Culture-forward gear built for athletes who take their craft seriously — on and off the field.",
@@ -605,10 +605,21 @@ export default function Home() {
           ref={(el) => { sectionRefs.current[i] = el; }}
           style={{ background: entity.bg }}
         >
+          {/* Section-specific background image */}
+          {(entity.id === "v1university" || entity.id === "v1clothing") && (
+            <div style={{ position: "absolute", inset: 0, zIndex: 0, overflow: "hidden" }}>
+              <Image
+                src={entity.id === "v1university" ? "/varsityone-v1-university-training-bg-cover.png" : "/varsityone-v1-shop-bg-cover2.png"}
+                alt="" fill style={{ objectFit: "cover", objectPosition: "center", opacity: 0.15 }}
+              />
+            </div>
+          )}
+
           {/* BG gradient blob */}
           <div style={{
             position: "absolute",
             inset: 0,
+            zIndex: 1,
             background: entity.id === "v1portal"
               ? "radial-gradient(ellipse at 80% 50%, #ff00e418 0%, transparent 55%)"
               : `radial-gradient(ellipse at 80% 50%, ${entity.accent}18 0%, transparent 55%)`,
