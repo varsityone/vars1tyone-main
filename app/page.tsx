@@ -402,6 +402,7 @@ export default function Home() {
           color: rgba(255,255,255,0.25);
           letter-spacing: 0.5px;
         }
+        .footer-location { display: inline; }
 
         .nav-bar {
           position: fixed;
@@ -540,6 +541,7 @@ export default function Home() {
             text-align: center;
             padding: 48px 6vw;
           }
+          .footer-location { display: block; }
         }
 
         .waitlist-overlay {
@@ -884,9 +886,9 @@ export default function Home() {
       <footer className="footer-section">
         <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
           <Image src="/v1-mark.png" alt="VarsityOne" width={20} height={30} style={{ objectFit: "contain" }} />
-          <span style={{ fontFamily: "'Barlow Condensed', sans-serif", fontSize: 14, fontWeight: 700, letterSpacing: 3, color: "rgba(255,255,255,0.4)", textTransform: "uppercase" }}>VarsityOne Group LLC</span>
+          <span style={{ fontFamily: "'Barlow Condensed', sans-serif", fontSize: 14, fontWeight: 700, letterSpacing: 0, color: "rgba(255,255,255,0.4)", textTransform: "uppercase" }}>VarsityOne Group LLC</span>
         </div>
-        <p className="footer-legal">© {new Date().getFullYear()} VarsityOne Group LLC. All rights reserved. San Diego, CA</p>
+        <p className="footer-legal">© {new Date().getFullYear()} VarsityOne Group LLC. All rights reserved. <span className="footer-location">San Diego, CA</span></p>
         <p className="footer-legal">www.vars1tyone.com</p>
       </footer>
     </main>
