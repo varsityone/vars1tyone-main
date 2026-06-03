@@ -531,7 +531,7 @@ export default function Home() {
           .nav-links { display: none; }
           .dot-nav { right: 12px; }
           .content-wrapper { padding: 0 6vw; }
-          .nav-logo-wrap { width: 21px; height: 28px; }
+          .nav-logo img { width: 21px !important; height: auto !important; }
           .entity-section { height: auto; min-height: 100svh; padding: 120px 0 64px; }
           .entity-name { letter-spacing: -4px; }
           .footer-section {
@@ -656,9 +656,7 @@ export default function Home() {
             <span /><span /><span />
           </button>
           <a href="#hero" style={{ textDecoration: "none" }}>
-            <div className="nav-logo-wrap">
-              <Image src="/varsityone-logo-mark-WHITE.png" alt="VarsityOne" fill style={{ objectFit: "contain" }} />
-            </div>
+            <Image src="/varsityone-logo-mark-WHITE.png" alt="VarsityOne" width={27} height={40} style={{ objectFit: "contain", display: "block" }} />
           </a>
         </div>
         <ul className="nav-links">
@@ -690,8 +688,8 @@ export default function Home() {
         <div className="noise-overlay" />
         <div style={{ position: "relative", zIndex: 2, textAlign: "center", display: "flex", flexDirection: "column", alignItems: "center" }}>
           {/* Full Logo Mark */}
-          <div className="logo-mark-svg" style={{ marginBottom: 0, width: "clamp(200px, 60vw, 400px)", height: "clamp(60px, 18vw, 120px)", position: "relative" }}>
-            <Image src="/nav-logo-varsityone-dark-mode-only.png" alt="VarsityOne" fill style={{ objectFit: "contain" }} />
+          <div className="logo-mark-svg" style={{ marginBottom: 0 }}>
+            <Image src="/nav-logo-varsityone-dark-mode-only.png" alt="VarsityOne" width={400} height={120} style={{ objectFit: "contain", maxWidth: "80vw", height: "auto" }} />
           </div>
           <div className="hero-sub" style={{ marginTop: 16 }}>
             <span style={{
@@ -888,8 +886,7 @@ export default function Home() {
           <Image src="/v1-mark.png" alt="VarsityOne" width={20} height={30} style={{ objectFit: "contain" }} />
           <span style={{ fontFamily: "'Barlow Condensed', sans-serif", fontSize: 14, fontWeight: 700, letterSpacing: 3, color: "rgba(255,255,255,0.4)", textTransform: "uppercase" }}>VarsityOne Group LLC</span>
         </div>
-        <p className="footer-legal">© {new Date().getFullYear()} VarsityOne Group LLC. All rights reserved.</p>
-        <p className="footer-legal">San Diego, CA</p>
+        <p className="footer-legal">© {new Date().getFullYear()} VarsityOne Group LLC. All rights reserved. San Diego, CA</p>
         <p className="footer-legal">www.vars1tyone.com</p>
       </footer>
     </main>
