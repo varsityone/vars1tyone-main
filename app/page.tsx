@@ -69,6 +69,7 @@ export default function Home() {
   const [activeIndex, setActiveIndex] = useState(0);
   const sectionRefs = useRef<(HTMLElement | null)[]>([]);
 
+  const [menuOpen, setMenuOpen] = useState(false);
   const [waitlistEntity, setWaitlistEntity] = useState<typeof entities[0] | null>(null);
   const [waitlistEmail, setWaitlistEmail] = useState("");
   const [waitlistStatus, setWaitlistStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
@@ -104,6 +105,17 @@ export default function Home() {
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
   }, [waitlistEntity]);
+
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => { if (e.key === "Escape") setMenuOpen(false); };
+    if (menuOpen) window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [menuOpen]);
+
+  useEffect(() => {
+    document.body.style.overflow = menuOpen ? "hidden" : "";
+    return () => { document.body.style.overflow = ""; };
+  }, [menuOpen]);
 
   useEffect(() => {
     const observers = sectionRefs.current.map((ref, i) => {
@@ -438,11 +450,95 @@ export default function Home() {
           align-items: center;
         }
 
+        /* Hamburger button */
+        .hamburger {
+          background: none;
+          border: none;
+          cursor: pointer;
+          padding: 8px;
+          display: flex;
+          flex-direction: column;
+          gap: 5px;
+          z-index: 150;
+          position: relative;
+        }
+        .hamburger span {
+          display: block;
+          width: 22px;
+          height: 2px;
+          background: rgba(255,255,255,0.8);
+          transition: all 0.3s ease;
+          transform-origin: center;
+        }
+        .hamburger.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+        .hamburger.open span:nth-child(2) { opacity: 0; transform: scaleX(0); }
+        .hamburger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+        /* Slide-out menu */
+        .slide-menu-overlay {
+          position: fixed;
+          inset: 0;
+          background: rgba(0,0,0,0.6);
+          backdrop-filter: blur(4px);
+          z-index: 130;
+          opacity: 0;
+          pointer-events: none;
+          transition: opacity 0.3s ease;
+        }
+        .slide-menu-overlay.open { opacity: 1; pointer-events: all; }
+
+        .slide-menu {
+          position: fixed;
+          top: 0; left: 0; bottom: 0;
+          width: 280px;
+          background: rgba(8,8,8,0.98);
+          border-right: 1px solid rgba(255,255,255,0.07);
+          z-index: 140;
+          transform: translateX(-100%);
+          transition: transform 0.35s cubic-bezier(0.4,0,0.2,1);
+          display: flex;
+          flex-direction: column;
+          padding: 88px 32px 40px;
+        }
+        .slide-menu.open { transform: translateX(0); }
+
+        .slide-menu-links {
+          list-style: none;
+          display: flex;
+          flex-direction: column;
+        }
+        .slide-menu-links a {
+          font-family: 'BankGothic','Barlow Condensed',sans-serif;
+          font-size: 26px;
+          font-weight: 700;
+          font-style: italic;
+          letter-spacing: -1px;
+          color: rgba(255,255,255,0.4);
+          text-decoration: none;
+          transition: color 0.2s;
+          display: block;
+          padding: 12px 0;
+          border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+        .slide-menu-links a:hover { color: #fff; }
+        .slide-menu-links li:last-child a { border-bottom: none; }
+
+        /* Nav logo wrapper */
+        .nav-logo-wrap { position: relative; width: 160px; height: 48px; }
+
         @media (max-width: 768px) {
           .entity-number { display: none; }
-          .nav-links { display: none; }
-          .dot-nav { right: 16px; }
+          .dot-nav { right: 12px; }
           .content-wrapper { padding: 0 6vw; }
+          .nav-logo-wrap { width: 90px; height: 28px; }
+          .entity-section { height: auto; min-height: 100svh; padding: 120px 0 64px; }
+          .entity-name { letter-spacing: -4px; }
+          .footer-section {
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            padding: 48px 6vw;
+          }
         }
 
         .waitlist-overlay {
@@ -528,18 +624,40 @@ export default function Home() {
         }
       `}</style>
 
-      {/* NAV */}
-      <nav className="nav-bar">
-        <a href="#hero" style={{ textDecoration: "none" }}>
-          <Image src="/varsityone-logo-mark-WHITE.png" alt="VarsityOne" width={160} height={48} style={{ objectFit: "contain" }} />
+      {/* SLIDE MENU OVERLAY */}
+      <div className={`slide-menu-overlay ${menuOpen ? "open" : ""}`} onClick={() => setMenuOpen(false)} />
+
+      {/* SLIDE MENU */}
+      <div className={`slide-menu ${menuOpen ? "open" : ""}`}>
+        <a href="#hero" onClick={() => setMenuOpen(false)} style={{ textDecoration: "none", marginBottom: 36 }}>
+          <Image src="/varsityone-logo-mark-WHITE.png" alt="VarsityOne" width={80} height={24} style={{ objectFit: "contain" }} />
         </a>
-        <ul className="nav-links">
+        <ul className="slide-menu-links">
           {entities.map((e) => (
             <li key={e.id}>
-              <a href={`#${e.id}`}>{e.name}</a>
+              <a href={`#${e.id}`} onClick={() => setMenuOpen(false)}>{e.name}</a>
             </li>
           ))}
         </ul>
+        <a href="/unsubscribe" style={{ marginTop: "auto", fontFamily: "'Barlow',sans-serif", fontSize: 11, letterSpacing: 2, textTransform: "uppercase", color: "rgba(255,255,255,0.2)", textDecoration: "none" }}>
+          Unsubscribe
+        </a>
+      </div>
+
+      {/* NAV */}
+      <nav className="nav-bar">
+        <button
+          className={`hamburger ${menuOpen ? "open" : ""}`}
+          onClick={() => setMenuOpen(v => !v)}
+          aria-label={menuOpen ? "Close menu" : "Open menu"}
+        >
+          <span /><span /><span />
+        </button>
+        <a href="#hero" style={{ textDecoration: "none" }}>
+          <div className="nav-logo-wrap">
+            <Image src="/varsityone-logo-mark-WHITE.png" alt="VarsityOne" fill style={{ objectFit: "contain" }} />
+          </div>
+        </a>
       </nav>
 
       {/* DOT NAV */}
@@ -562,20 +680,20 @@ export default function Home() {
         <div className="noise-overlay" />
         <div style={{ position: "relative", zIndex: 2, textAlign: "center", display: "flex", flexDirection: "column", alignItems: "center" }}>
           {/* Full Logo Mark */}
-          <div className="logo-mark-svg" style={{ marginBottom: 0 }}>
-            <Image src="/nav-logo-varsityone-dark-mode-only.png" alt="VarsityOne" width={400} height={120} style={{ objectFit: "contain" }} />
+          <div className="logo-mark-svg" style={{ marginBottom: 0, width: "clamp(200px, 60vw, 400px)", height: "clamp(60px, 18vw, 120px)", position: "relative" }}>
+            <Image src="/nav-logo-varsityone-dark-mode-only.png" alt="VarsityOne" fill style={{ objectFit: "contain" }} />
           </div>
           <div className="hero-sub" style={{ marginTop: 16 }}>
             <span style={{
               fontFamily: "'Barlow', sans-serif",
-              fontSize: "clamp(13px, 1.5vw, 17px)",
+              fontSize: "clamp(11px, 2.5vw, 17px)",
               fontWeight: 300,
-              letterSpacing: "clamp(3px, 1vw, 8px)",
+              letterSpacing: "clamp(2px, 1vw, 8px)",
               textTransform: "uppercase",
               color: "rgba(255,255,255,0.4)",
             }}>The V1 Hub. Everything Football.</span>
           </div>
-          <div className="hero-entities" style={{ marginTop: 25, display: "flex", gap: "clamp(16px, 3vw, 40px)", flexWrap: "wrap", justifyContent: "center" }}>
+          <div className="hero-entities" style={{ marginTop: 25, display: "flex", gap: "clamp(12px, 3vw, 40px)", flexWrap: "wrap", justifyContent: "center", padding: "0 24px" }}>
             {entities.map((e) => (
               <span key={e.id} style={{
                 fontFamily: "'Barlow Condensed', sans-serif",
