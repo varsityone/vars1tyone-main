@@ -524,7 +524,7 @@ export default function Home() {
         .slide-menu-links li:last-child a { border-bottom: none; }
 
         /* Nav logo wrapper */
-        .nav-logo-wrap { position: relative; width: 160px; height: 48px; }
+        .nav-logo-wrap { position: relative; width: 27px; height: 48px; }
 
         @media (max-width: 768px) {
           .entity-number { display: none; }
@@ -631,7 +631,7 @@ export default function Home() {
       {/* SLIDE MENU */}
       <div className={`slide-menu ${menuOpen ? "open" : ""}`}>
         <a href="#hero" onClick={() => setMenuOpen(false)} style={{ textDecoration: "none", marginBottom: 36 }}>
-          <Image src="/varsityone-logo-mark-WHITE.png" alt="VarsityOne" width={80} height={24} style={{ objectFit: "contain" }} />
+          <Image src="/nav-logo-varsityone-dark-mode-only.png" alt="VarsityOne" width={160} height={48} style={{ objectFit: "contain" }} />
         </a>
         <ul className="slide-menu-links">
           {entities.map((e) => (
