@@ -528,6 +528,7 @@ export default function Home() {
 
         @media (max-width: 768px) {
           .entity-number { display: none; }
+          .nav-links { display: none; }
           .dot-nav { right: 12px; }
           .content-wrapper { padding: 0 6vw; }
           .nav-logo-wrap { width: 90px; height: 28px; }
@@ -646,18 +647,27 @@ export default function Home() {
 
       {/* NAV */}
       <nav className="nav-bar">
-        <button
-          className={`hamburger ${menuOpen ? "open" : ""}`}
-          onClick={() => setMenuOpen(v => !v)}
-          aria-label={menuOpen ? "Close menu" : "Open menu"}
-        >
-          <span /><span /><span />
-        </button>
-        <a href="#hero" style={{ textDecoration: "none" }}>
-          <div className="nav-logo-wrap">
-            <Image src="/varsityone-logo-mark-WHITE.png" alt="VarsityOne" fill style={{ objectFit: "contain" }} />
-          </div>
-        </a>
+        <div style={{ display: "flex", alignItems: "center", gap: 16 }}>
+          <button
+            className={`hamburger ${menuOpen ? "open" : ""}`}
+            onClick={() => setMenuOpen(v => !v)}
+            aria-label={menuOpen ? "Close menu" : "Open menu"}
+          >
+            <span /><span /><span />
+          </button>
+          <a href="#hero" style={{ textDecoration: "none" }}>
+            <div className="nav-logo-wrap">
+              <Image src="/varsityone-logo-mark-WHITE.png" alt="VarsityOne" fill style={{ objectFit: "contain" }} />
+            </div>
+          </a>
+        </div>
+        <ul className="nav-links">
+          {entities.map((e) => (
+            <li key={e.id}>
+              <a href={`#${e.id}`}>{e.name}</a>
+            </li>
+          ))}
+        </ul>
       </nav>
 
       {/* DOT NAV */}
