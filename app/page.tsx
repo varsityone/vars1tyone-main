@@ -22,7 +22,7 @@ const entities = [
     logo: "/V1SPORTZ-LOGO+MARK-VARSITYONE.png",
     tagline: "Competitive Leagues. Real Opportunity.",
     description:
-      "V1Sportz runs competitive football leagues in the Inland Empire and beyond — built to give athletes real game reps, real film, and real pathways to the next level.",
+      "Launching in 2027, V1Sportz® will run competitive national 7on7 and flag football tournaments across the country with an invite only national broadcast championship in San Diego California — built to give athletes real game reps, real film and real pathways to the next level.",
     cta: "Coming Soon",
     ctaHref: "#",
     ctaLive: false,
@@ -44,6 +44,7 @@ const entities = [
   {
     id: "v1clothing",
     name: "V1GEAR",
+    logo: "/V1SHOP-LOGO+MARK-VARSITYONE.png",
     tagline: "Wear the Standard.",
     description:
       "The VarsityOne clothing brand. Culture-forward gear built for athletes who take their craft seriously — on and off the field.",
