@@ -6,6 +6,7 @@ const entities = [
   {
     id: "v1portal",
     name: "V1PORTAL",
+    logo: "/nav-logo-v1portal-dark-mode-only.png",
     tagline: "College Football Recruiting Intelligence",
     description:
       "Know exactly where you stand. V1Portal gives athletes a data-driven recruiting score, matches them with programs at their level, and builds a week-by-week action plan to get in front of the right coaches.",
@@ -18,6 +19,7 @@ const entities = [
   {
     id: "v1sportz",
     name: "V1SPORTZ",
+    logo: "/V1SPORTZ-LOGO+MARK-VARSITYONE.png",
     tagline: "Competitive Leagues. Real Opportunity.",
     description:
       "V1Sportz runs competitive football leagues in the Inland Empire and beyond — built to give athletes real game reps, real film, and real pathways to the next level.",
@@ -763,16 +765,22 @@ export default function Home() {
             <div className="entity-label">VarsityOne Group — 0{i + 1} / 0{entities.length}</div>
             <div className="accent-bar" style={{ background: entity.accent }} />
 
-            {/* Logo placeholder — swap per entity later */}
-            <div style={{ marginBottom: 24, display: "flex", alignItems: "center", gap: 12 }}>
-              <Image src="/v1-mark.png" alt={entity.name} width={24} height={36} style={{ objectFit: "contain" }} />
-              <span style={{
-                fontFamily: "'Barlow Condensed', sans-serif",
-                fontSize: 22,
-                fontWeight: 800,
-                letterSpacing: 3,
-                color: "rgba(255,255,255,0.9)"
-              }}>{entity.name}</span>
+            {/* Entity logo */}
+            <div style={{ marginBottom: 24 }}>
+              {"logo" in entity && entity.logo ? (
+                <Image src={entity.logo} alt={entity.name} width={160} height={48} style={{ objectFit: "contain", objectPosition: "left" }} />
+              ) : (
+                <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+                  <Image src="/v1-mark.png" alt={entity.name} width={24} height={36} style={{ objectFit: "contain" }} />
+                  <span style={{
+                    fontFamily: "'Barlow Condensed', sans-serif",
+                    fontSize: 22,
+                    fontWeight: 800,
+                    letterSpacing: 3,
+                    color: "rgba(255,255,255,0.9)"
+                  }}>{entity.name}</span>
+                </div>
+              )}
             </div> 
 
             <h2 className="entity-name">{entity.name}</h2>
