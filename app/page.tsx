@@ -734,10 +734,10 @@ export default function Home() {
           style={{ background: entity.bg }}
         >
           {/* Section-specific background image */}
-          {(entity.id === "v1university" || entity.id === "v1clothing") && (
+          {(entity.id === "v1university" || entity.id === "v1clothing" || entity.id === "v1sportz") && (
             <div style={{ position: "absolute", inset: 0, zIndex: 0, overflow: "hidden" }}>
               <Image
-                src={entity.id === "v1university" ? "/varsityone-v1-university-training-bg-cover.png" : "/varsityone-v1-shop-bg-cover2.png"}
+                src={entity.id === "v1university" ? "/varsityone-v1-university-training-bg-cover.png" : entity.id === "v1clothing" ? "/varsityone-v1-shop-bg-cover2.png" : "/v1-league.png"}
                 alt="" fill style={{ objectFit: "cover", objectPosition: "center", opacity: 0.15 }}
               />
             </div>
