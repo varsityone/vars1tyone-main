@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import ConsentBanner from "@/components/ConsentBanner";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -18,6 +19,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang="en">
       <body style={{ margin: 0, background: "#000", color: "#fff" }}>
         {children}
+        <ConsentBanner />
       </body>
     </html>
   );
