@@ -488,6 +488,18 @@ export default function V2Preview() {
           letter-spacing:0.3px; color:rgba(255,255,255,0.18);
         }
 
+        /* ── PREVIEW CHIP ── */
+        .preview-chip {
+          position:fixed; bottom:20px; left:50%; transform:translateX(-50%);
+          z-index:999; white-space:nowrap;
+          background:rgba(10,10,10,0.9); backdrop-filter:blur(20px);
+          border-radius:999px;
+          padding:9px 18px; display:flex; align-items:center; gap:10px;
+          font-family:'Inter',sans-serif; font-size:11px; font-weight:500;
+          color:rgba(255,255,255,0.38);
+        }
+        .chip-dot { width:6px; height:6px; border-radius:50%; background:#06B6D4;
+          animation:cdot 2s ease-in-out infinite; flex-shrink:0; }
         @keyframes cdot { 0%,100%{opacity:1;} 50%{opacity:0.25;} }
 
         @media(max-width:900px) {
@@ -503,6 +515,13 @@ export default function V2Preview() {
           .hero-os { letter-spacing:-3px; }
         }
       `}</style>
+
+      {/* PREVIEW */}
+      <div className="preview-chip">
+        <span className="chip-dot" />
+        Design Preview — v2
+        <a href="/" style={{ color:"rgba(255,255,255,0.28)", textDecoration:"none" }}>← Live</a>
+      </div>
 
       {/* NAV */}
       <nav className={`v2-nav ${scrolled ? "scrolled" : ""}`}>
